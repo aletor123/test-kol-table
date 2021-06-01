@@ -5,11 +5,6 @@ from django.db import models
 
 class Kol(models.Model):
 
-    class Specialty(models.TextChoices):
-        oncology = 'oncology', 'Oncology'
-        second = 'second', 'Second'
-        third = 'third', 'Third'
-
     first_name = models.CharField(
         max_length=255,
     )
@@ -24,7 +19,6 @@ class Kol(models.Model):
     )
     specialty = models.CharField(
         max_length=255,
-        choices=Specialty.choices,
     )
 
     def full_name(self):
