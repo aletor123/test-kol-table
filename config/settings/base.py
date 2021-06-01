@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps.kol',
+    'import_export',
+    'import_export_celery',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,19 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+IMPORT_EXPORT_CELERY_INIT_MODULE = 'config.celery'
+
+IMPORT_EXPORT_CELERY_MODELS = {
+    'Kol': {
+        'app_label': 'apps.kol',
+        'model_name': 'Kol',
+    }
+}
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+
+BROKER_TRANSPORT = 'redis'
+CELERY_BROKER_URL = f'{BROKER_TRANSPORT}://{REDIS_HOST}:{REDIS_PORT}/0'
+CELERY_RESULT_BACKEND = f'{BROKER_TRANSPORT}://{REDIS_HOST}:{REDIS_PORT}/0'

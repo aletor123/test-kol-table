@@ -2,6 +2,8 @@ from django.db import models
 
 
 # Create your models here.
+from import_export.resources import ModelResource
+
 
 class Kol(models.Model):
 
@@ -30,3 +32,14 @@ class Kol(models.Model):
     def full_name(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}, ' \
                f'{self.credential}'
+
+    @classmethod
+    def export_resource_classes(cls):
+        return {
+            'kol': ("Kol resource", KolResource)
+        }
+
+
+class KolResource(ModelResource):
+    class Meta:
+        model = Kol
