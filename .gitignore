@@ -1,0 +1,12 @@
+local.py
+node_modules/*
+venv
+.idea
+.git
+__version__.py
+__pycache__
+.sass-cache
+
+# pytest
+.pytest_cache/*
+

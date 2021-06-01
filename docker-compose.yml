@@ -1,0 +1,15 @@
+version: '3'
+
+volumes:
+  ipython_history: {}
+
+services:
+  postgres:
+    image: postgis/postgis:13-master
+    ports:
+     - "5432:5432"
+    environment:
+      - POSTGRES_DB=usummit_dev
+      - POSTGRES_USER=usummit_user
+      - POSTGRES_PASSWORD=manager
+    command: postgres -c 'statement_timeout=20000'
