@@ -1,37 +1,78 @@
 <template>
-  <div m="5">
-    <b-col lg="6" class="my-1">
-      <b-form-group
-          label="Filter"
-          label-for="filter-input"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          class="mb-0"
-      >
-        <b-form-select
-            size="sm"
-            v-model="filter"
-            :options="specialtiesChoices"
+  <div>
+    <!--  KOLS ACTIONS  -->
+    <div align="right">
+      <b-button class="mr-1">Delete HCP</b-button>
+      <b-button class="mr-1">Button 2</b-button>
+      <b-button class="mr-1">Button 3</b-button>
+      <b-button class="mr-1">Button 4</b-button>
+      <b-button>Button 3</b-button>
+    </div>
+    <!--  END KOLS ACTIONS  -->
+
+    <!--  FILTERS  -->
+    <b-row>
+      <b-col lg="3" class="my-1">
+        <b-form-group class="mb-0">
+          <b-input-group size="sm">
+            <b-form-input
+                id="filter-input"
+                v-model="filters.search"
+                type="search"
+                placeholder="Type to Search"
+            ></b-form-input>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+
+      <b-col lg="2" class="my-1">
+        <b-form-group
+            class="mb-0"
         >
-          <template #first>
-            <b-form-select-option :value="null">-- Please select an option --</b-form-select-option>
-          </template>
-        </b-form-select>
-      </b-form-group>
-    </b-col>
+          <b-form-select
+              size="sm"
+              v-model="filters.specialty"
+              :options="specialtiesChoices"
+          >
+            <template #first>
+              <b-form-select-option :value="null">
+                Specialty filter
+              </b-form-select-option>
+            </template>
+          </b-form-select>
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <!--  END FILTERS  -->
+
+    <!--  TABLE  -->
     <b-table
         striped
         hover
         :current-page="currentPage"
         :per-page="perPage"
-        :items="items"
+        :items="filtered"
         :fields="fields"
-        :filter="filter"
         :filter-included-fields="filterOn"
-        @filtered="onFiltered"
+        selectable
+        :select-mode="selectMode"
+        @row-selected="onRowSelected"
     >
+      <template #cell(selected)="{ rowSelected }">
+        <template v-if="rowSelected">
+          <span aria-hidden="true">&check;</span>
+          <span class="sr-only">Selected</span>
+        </template>
+        <template v-else>
+          <span aria-hidden="true">&nbsp;</span>
+          <span class="sr-only">Not selected</span>
+        </template>
+      </template>
     </b-table>
+    <!--  END TABLE  -->
+
+
+    <!-- PAGINATION  -->
     <b-row>
       <b-col sm="1" md="1" class="my-1">
         <b-form-group class="mb-0">
@@ -57,6 +98,7 @@
         ></b-pagination>
       </b-col>
     </b-row>
+    <!-- END PAGINATION  -->
   </div>
 </template>
 
@@ -75,6 +117,11 @@ export default {
       // Note 'isActive' is left out and will not appear in the rendered table
       fields: [
         {
+          key: "selected",
+          label: "",
+          sortable: false,
+        },
+        {
           key: 'full_name',
           label: 'Name, credential',
           sortable: true
@@ -89,7 +136,12 @@ export default {
         {full_name: 'Geneva', specialty: 'Wilson'},
         {full_name: 'Jami', specialty: 'Carney'}
       ],
-      filter: null,
+      filters: {
+        search: null,
+        specialty: null
+      },
+      selectMode: 'multi',
+      selected: [],
       filterOn: [],
       specialtiesChoices: [],
       totalRows: 1,
@@ -98,11 +150,42 @@ export default {
       pageOptions: [5, 10, 50, 100],
     }
   },
+
+  computed: {
+    filtered() {
+      const filtered = this.items.filter(item => {
+        return Object.keys(this.filters).every(function (key) {
+          const filterValue = this.filters[key];
+          if (filterValue === null || filterValue === '') {
+            return true
+          }
+          if (key === 'search') {
+            return Object.values(item).some(element => String(element).includes(filterValue))
+          }
+          return String(item[key]).includes(filterValue);
+        }.bind(this))
+      })
+
+      if (filtered.length > 0) {
+        this.totalRows = filtered.length
+        this.currentPage = 1
+        return filtered
+      }
+
+      return [{
+        full_name: '',
+        specialty: ''
+      }]
+    }
+  },
+
   beforeMount() {
     this.getSpecialties();
     this.getKols();
   },
+
   methods: {
+
     getKols() {
       axios.get(kols_api_url)
           .then(result => {
@@ -110,15 +193,15 @@ export default {
             this.totalRows = this.items.length;
           })
     },
+
     getSpecialties() {
       axios.get(kols_api_url + 'specialties/')
           .then(result => this.specialtiesChoices = result.data.specialties)
     },
-    onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItems.length
-      this.currentPage = 1
-    }
+
+    onRowSelected(items) {
+      this.selected = items
+    },
   }
 }
 </script>
