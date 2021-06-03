@@ -18,5 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('apps.kol.api.urls', namespace='kols_api')),
+    path('api/', include('apps.kols.api.urls', namespace='kols_api')),
+    path('kols/', include('apps.kols.urls', namespace='kols')),
 ]

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.kol.models import Kol
+from apps.kols.models import Kol
 
 
 class KolListSerializer(serializers.ModelSerializer):

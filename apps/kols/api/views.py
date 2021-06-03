@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
 from .serializers import KolListSerializer, KolCreateSerializer
-from apps.kol.models import Kol
+from apps.kols.models import Kol
 
 
 class KolViewSet(ModelViewSet):

@@ -2,3 +2,7 @@ django
 psycopg2
 django-rest-framework
 django-webpack-loader
+django-datatables-view
+invoke
+django-extensions
+factory_boy
