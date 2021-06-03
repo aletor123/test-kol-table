@@ -1,7 +1,10 @@
-django
+django~=3.2.4
 psycopg2
 django-rest-framework
 django-webpack-loader
-invoke
+invoke~=1.5.0
 django-extensions
 factory_boy
+djangorestframework~=3.12.4
+celery~=5.1.0
+data-wizard

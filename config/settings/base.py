@@ -39,7 +39,21 @@ INSTALLED_APPS = [
     'rest_framework',
     'webpack_loader',
     'apps.kol',
+
+    'data_wizard',
+    'data_wizard.sources',
 ]
+
+DATA_WIZARD = {
+    # 'BACKEND': 'data_wizard.backends.celery',
+    'BACKEND': 'data_wizard.backends.threading',
+    'LOADER': 'data_wizard.loaders.FileLoader',
+    'IDMAP': 'data_wizard.idmap.never',
+    'AUTHENTICATION': 'rest_framework.authentication.SessionAuthentication',
+    'PERMISSION': 'rest_framework.permissions.IsAdminUser'
+}
+
+CELERY_RESULT_BACKEND = BROKER_URL = 'redis://localhost:6379/1'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

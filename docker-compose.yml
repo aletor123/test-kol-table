@@ -13,3 +13,20 @@ services:
       - POSTGRES_USER=usummit_user
       - POSTGRES_PASSWORD=manager
     command: postgres -c 'statement_timeout=20000'
+
+  redis:
+    image: redis
+    container_name: kols-redis
+    ports:
+      - "6379:6379"
+
+  celery-worker:
+    build: .
+    container_name: celery
+    volumes:
+      - ./:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.base
+    command: celery worker -A config
+    depends_on:
+      - redis

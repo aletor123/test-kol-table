@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.kol.urls', namespace='kols')),
     path('api/', include('apps.kol.api.urls', namespace='kols_api')),
+    path('datawizard/', include('data_wizard.urls')),
 ]
