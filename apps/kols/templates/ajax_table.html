@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.25/sl-1.3.3/datatables.min.css"/>
+
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.25/sl-1.3.3/datatables.min.js"></script>
+{% endblock %}
+{% block content %}
+    {{ form_specialty }}
+    {{ form_specialty.media }}
+
+    <div class="table-responsive">
+        <table id="datatable_kols" class="table">
+        </table>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript"
+            src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            AjaxDatatableViewUtils.initialize_table(
+                $('#datatable_kols'),
+                "{% url 'kols:ajax_datatable_kols' %}",
+                {
+                    // extra_options (example)
+                    processing: false,
+                    autoWidth: false,
+                    full_row_select: true,
+                    scrollX: false
+                }, {
+                    // extra_data
+                    // ...
+                },
+            );
+        });
+
+    </script>
+{% endblock %}
